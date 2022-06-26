@@ -17,12 +17,21 @@ interface IConnectionRepository {
 class ConnectionRepository() : IConnectionRepository {
 
     override fun startConnectionObserving(): Observable<ConnectionState> {
-        return Observable.interval(1L, TimeUnit.SECONDS).observeOn(
+       return Observable.interval(1L, TimeUnit.SECONDS).observeOn(
             AndroidSchedulers.mainThread()
         ).map {
             val value = ConnectionOptions.values().random()
             Log.d("connection", "startConnectionObserving: $value")
             ConnectionState(value)
         }
+    }
+}
+
+fun main() {
+    Observable.create<Int> {
+        it.onNext(1)
+        it.onNext(1)
+    }.distinctUntilChanged().subscribe {
+        println(it)
     }
 }
