@@ -12,5 +12,4 @@ class CommandImp(val model: CommandModel) : Command {
     override suspend fun execute() {
         model.performAction()
     }
-
 }

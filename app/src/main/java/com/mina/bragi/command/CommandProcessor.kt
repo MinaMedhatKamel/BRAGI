@@ -1,10 +1,13 @@
 package com.mina.bragi.command
 
+import com.mina.bragi.data.CommandModel
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 object CommandProcessor {
     private val commandsChannel = Channel<Command>()
@@ -33,4 +36,23 @@ object CommandProcessor {
             }
         }
     }
+}
+
+//Step 2 using RXjAVA
+fun main() {
+    Observable.create<CommandModel> {
+        for (i in 1..10) {
+            val command = CommandModel(i, "my name is $i")
+            it.onNext(command)
+        }
+    }.concatMap { s ->
+        Observable.interval(s.id.toLong(), TimeUnit.SECONDS).take(1).map { s }
+    }
+        .subscribe {
+            it.performActionSync()
+            println("CommandModel action finished! in ${it.id} seconds")
+        }
+
+    // for testing only on the main function
+    Thread.sleep(60000)
 }

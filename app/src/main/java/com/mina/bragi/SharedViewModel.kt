@@ -11,6 +11,7 @@ import com.mina.bragi.intent.SharedIntent
 import com.mina.bragi.state.ConnectionState
 import com.mina.movieslist.effects.SharedEffects
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
@@ -18,54 +19,41 @@ class SharedViewModel(private val repo: ConnectionRepository = ConnectionReposit
     BaseViewModel<ConnectionState, SharedIntent, SharedEffects>(
         ConnectionState(ConnectionOptions.CONNECTION_ERROR)
     ) {
-
-    private var isEstablishedConnectionEnabled = false;
+    private var disposable: Disposable? = null
 
     init {
         sendAction(SharedIntent.StartConnectionInterval)
     }
 
     private fun startConnection() {
-        repo.startConnectionObserving().observeOn(AndroidSchedulers.mainThread())
+        disposable = repo.startConnectionObserving()
+            .observeOn(AndroidSchedulers.mainThread())
             .distinctUntilChanged().subscribe { newState ->
                 emitState(newState)
-
-//                var disposable: Disposable? = null
-//                val consumer = object : (ConnectionState) -> Unit {
-//                    override fun invoke(previous: ConnectionState) {
-//                        Log.d(
-//                            "connection",
-//                            "startConnection: new ${newState.newConnectionState.name} old ${previous.newConnectionState.name}"
-//                        )
-//                        if (!newState.equals(previous)) {
-//                            emitState(newState)
-//                            disposable?.dispose()
-//                            disposable = null
-//                        }
-//                    }
-//                }
-//
-//                if (isEstablishedConnectionEnabled) {
-//                    // emit only the connection established state.
-//                    if (newState.newConnectionState.equals(ConnectionOptions.CONNECTION_ESTABLISHED))
-//                        emitState(newState)
-//                } else {
-//                    //subscription for checking the last state and compare it with the newone.
-//                    disposable =
-//                        state.observeOn(AndroidSchedulers.mainThread()).subscribe(consumer)
-//                }
-//            }
+                sendEffect(SharedEffects.ShowPop(newState.newConnectionState.name))
             }
     }
 
     override fun processIntents(intent: SharedIntent) {
         when (intent) {
             SharedIntent.StartConnectionInterval -> startConnection()
-            SharedIntent.ApplyEstablishedConnectionFilter -> applyEstablishedConnectionFilter()
-            SharedIntent.ResetEstablishedConnectionFilter -> resetEstablishedConnectionFilter()
+            SharedIntent.stopConnectionObserving -> disposeConnectionSubscribtion()
+            SharedIntent.ConnectionCheckClick -> checkConnectionState()
             SharedIntent.NavigateToSignUp -> navigateToSignUp()
             SharedIntent.NavigateToForgetPass -> navigateToForgetPass()
             SharedIntent.SendCommands -> sendCommands()
+        }
+    }
+
+    private fun disposeConnectionSubscribtion() {
+        disposable?.dispose()
+    }
+
+    private fun checkConnectionState() {
+        state.value?.let {
+            if (it.newConnectionState == ConnectionOptions.CONNECTION_ESTABLISHED) {
+                sendEffect(SharedEffects.ShowPop("message sent " + it.newConnectionState.name))
+            }
         }
     }
 
@@ -83,13 +71,5 @@ class SharedViewModel(private val repo: ConnectionRepository = ConnectionReposit
 
     private fun navigateToSignUp() {
         sendEffect(SharedEffects.NavigateToSignUp)
-    }
-
-    private fun applyEstablishedConnectionFilter() {
-        isEstablishedConnectionEnabled = true
-    }
-
-    private fun resetEstablishedConnectionFilter() {
-        isEstablishedConnectionEnabled = false
     }
 }
