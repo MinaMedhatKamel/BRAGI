@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Bragi</string>
+    <string name="check_connection">Check connection</string>
+    <string name="connection_dialog_title">Connection State</string>
+    <string name="next">Next</string>
+    <string name="login_screen_title">Login</string>
+    <string name="signup_screen_title">Sign Up</string>
+    <string name="send_commands">Send Commands</string>
+</resources>
