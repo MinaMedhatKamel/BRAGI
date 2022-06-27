@@ -28,9 +28,7 @@ abstract class BaseViewModel<S, I, E>(initState: S) : ViewModel() {
     }
 
     fun sendAction(action: I) {
-        viewModelScope.launch {
-            _intent.onNext(action)
-        }
+        _intent.onNext(action)
     }
 
     fun sendEffect(effect: E) {

@@ -1,6 +1,5 @@
 package com.mina.bragi
 
-import android.util.Log
 import com.mina.bragi.command.Command
 import com.mina.bragi.command.CommandImp
 import com.mina.bragi.command.CommandProcessor
@@ -11,11 +10,10 @@ import com.mina.bragi.intent.SharedIntent
 import com.mina.bragi.state.ConnectionState
 import com.mina.movieslist.effects.SharedEffects
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class SharedViewModel(private val repo: ConnectionRepository = ConnectionRepository()) :
+class SharedViewModel(private val repo: ConnectionRepository = ConnectionRepository(),val schedulers: Scheduler = AndroidSchedulers.mainThread()) :
     BaseViewModel<ConnectionState, SharedIntent, SharedEffects>(
         ConnectionState(ConnectionOptions.CONNECTION_ERROR)
     ) {
@@ -27,7 +25,7 @@ class SharedViewModel(private val repo: ConnectionRepository = ConnectionReposit
 
     private fun startConnection() {
         disposable = repo.startConnectionObserving()
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(schedulers)
             .distinctUntilChanged().subscribe { newState ->
                 emitState(newState)
                 sendEffect(SharedEffects.ShowPop(newState.newConnectionState.name))

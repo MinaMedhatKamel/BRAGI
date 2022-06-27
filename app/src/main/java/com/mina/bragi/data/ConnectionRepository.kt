@@ -4,6 +4,7 @@ import android.util.Log
 import com.mina.bragi.state.ConnectionState
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -14,11 +15,11 @@ interface IConnectionRepository {
     fun startConnectionObserving(): Observable<ConnectionState>
 }
 
-class ConnectionRepository() : IConnectionRepository {
+class ConnectionRepository(val schedulers: Scheduler = AndroidSchedulers.mainThread()) : IConnectionRepository {
 
     override fun startConnectionObserving(): Observable<ConnectionState> {
         return Observable.interval(1L, TimeUnit.SECONDS).observeOn(
-            AndroidSchedulers.mainThread()
+            schedulers
         ).map {
             val value = ConnectionOptions.values().random()
             Log.d("connection", "startConnectionObserving: $value")
