@@ -13,7 +13,10 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.Disposable
 
-class SharedViewModel(private val repo: ConnectionRepository = ConnectionRepository(),val schedulers: Scheduler = AndroidSchedulers.mainThread()) :
+class SharedViewModel(
+    private val repo: ConnectionRepository = ConnectionRepository(),
+    val schedulers: Scheduler = AndroidSchedulers.mainThread()
+) :
     BaseViewModel<ConnectionState, SharedIntent, SharedEffects>(
         ConnectionState(ConnectionOptions.CONNECTION_ERROR)
     ) {

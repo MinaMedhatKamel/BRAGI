@@ -5,14 +5,11 @@ import com.mina.bragi.data.ConnectionRepository
 import com.mina.bragi.data.assertNoCompleteOrErrors
 import com.mina.bragi.intent.SharedIntent
 import com.mina.bragi.state.ConnectionState
-import com.mina.movieslist.effects.SharedEffects
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.TestScheduler
-import kotlinx.coroutines.Dispatchers
-import org.hamcrest.core.AnyOf
 import org.junit.Before
 import org.junit.Test
 
@@ -48,6 +45,4 @@ class SharedViewModelTest {
 
         testObserverState.assertNoCompleteOrErrors()
     }
-
-
 }

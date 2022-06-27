@@ -8,18 +8,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import com.mina.bragi.MainActivity
 import com.mina.bragi.R
 import com.mina.bragi.SharedViewModel
 import com.mina.bragi.databinding.FragmentLoginBinding
 import com.mina.bragi.intent.SharedIntent
-import com.mina.bragi.state.ConnectionState
 import com.mina.movieslist.effects.SharedEffects
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
 
 class LoginFragment : Fragment() {
 

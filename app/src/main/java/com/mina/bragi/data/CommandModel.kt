@@ -8,6 +8,7 @@ data class CommandModel(val id: Int, val name: String) {
         delay(id * 1000L)
         println("CommandModel action finished! in $id seconds")
     }
+    //this method for testing rx java step 2 solution.
      fun performActionSync() {
         println("CommandModel performing action in Command #$id name #$name")
     }

@@ -5,7 +5,7 @@ import io.reactivex.rxjava3.schedulers.TestScheduler
 import org.junit.Before
 import org.junit.Test
 
-class ConnectionRepositoryTest{
+class ConnectionRepositoryTest {
     lateinit var repository: ConnectionRepository
 
     @Before
@@ -13,8 +13,6 @@ class ConnectionRepositoryTest{
         val testScheduler = TestScheduler()
         repository = ConnectionRepository(testScheduler)
     }
-
-
 
     @Test
     fun `test connection observer returns values without errors`() {
@@ -24,8 +22,6 @@ class ConnectionRepositoryTest{
         // Then
         testObserver.assertNoCompleteOrErrors()
     }
-
-
 }
 
 fun <T> TestObserver<T>.assertNoCompleteOrErrors() {
